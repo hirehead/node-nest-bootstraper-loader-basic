@@ -1,8 +1,9 @@
 /// <reference path="_ref.d.ts" />
 
-class NestBootstraperLoaderBasic implements Nest.IBootstraperLoader {
+export class NestBootstraperLoaderBasic implements Nest.IBootstraperLoader {
 
     constructor(
+        public require: (path: string) => any,
         public registrator: Nest.IBootstraperRegistrator,
         public bootstraper: Nest.IBootstraper) {}
 
@@ -13,7 +14,7 @@ class NestBootstraperLoaderBasic implements Nest.IBootstraperLoader {
             });
         } else if (typeof json === 'string') {
             var split: Array < string > = ( < string > json).split('&');
-            var pckg = require(split[0]);
+            var pckg = this.require(split[0]);
             if (split.length > 1)
                 return pckg['step_' + split[1]];
             else if (typeof pckg === 'function' || typeof pckg === 'array')
@@ -26,10 +27,12 @@ class NestBootstraperLoaderBasic implements Nest.IBootstraperLoader {
     }
 
     register(json: Array < any > );
-    register(json: string);
-    register(json: any) {
-        if (typeof json === 'string') {
-            json = require(json);
+    register(json ? : string);
+    register(json ? : any) {
+        if (json === undefined || typeof json === 'string') {
+            if (json === undefined)
+                json = './package.json';
+            json = this.require(json);
             if (json) {
                 if (json.nest && json.nest.bootstrap)
                     json = json.nest.bootstrap;
@@ -89,5 +92,3 @@ class NestBootstraperLoaderBasic implements Nest.IBootstraperLoader {
         proc(0);
     }
 }
-
-module.exports = NestBootstraperLoaderBasic;
