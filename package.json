@@ -1,6 +1,6 @@
 {
   "name": "nest-bootstraper-loader-basic",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "basic implementation of the nest-bootstraper-loader",
   "main": "index.js",
   "scripts": {
