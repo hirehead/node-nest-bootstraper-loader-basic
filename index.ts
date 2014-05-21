@@ -66,11 +66,12 @@ export class NestBootstraperLoaderBasic implements Nest.IBootstraperLoader {
                 reg: tmp
             });
 
+        var registr = this.registrator || this.bootstraper;
+
         var r = (x: Array < any > ) => {
-            if (this.registrator)
-                this.registrator.register(this.reg(x));
-            else
-                this.bootstraper.register(this.reg(x));
+            var toRegister = this.reg(x);
+            for (var i = 0; i < toRegister.length; ++i)
+                registr.register(toRegister[i]);
         };
 
         var proc = (i: number) => {
