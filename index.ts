@@ -8,7 +8,7 @@ export class NestBootstraperLoaderBasic implements Nest.IBootstraperLoader {
         public bootstraper: Nest.IBootstraper) {}
 
     reg(json: any): any {
-        if (typeof json === 'array') {
+        if (json instanceof Array) {
             return ( < Array < any >> json).map((x, i, v) => {
                 return this.reg(x);
             });
@@ -17,7 +17,7 @@ export class NestBootstraperLoaderBasic implements Nest.IBootstraperLoader {
             var pckg = this.require(split[0]);
             if (split.length > 1)
                 return pckg['step_' + split[1]];
-            else if (typeof pckg === 'function' || typeof pckg === 'array')
+            else if (typeof pckg === 'function' || pckg instanceof Array)
                 return pckg;
             else
                 return pckg['step'];
@@ -43,7 +43,7 @@ export class NestBootstraperLoaderBasic implements Nest.IBootstraperLoader {
             }
         }
 
-        if (typeof json !== 'array')
+        if (!(json instanceof Array))
             throw 'incorrect formatting of the config';
 
         var reg = [];
